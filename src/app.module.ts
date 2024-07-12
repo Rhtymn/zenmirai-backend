@@ -1,9 +1,10 @@
-import { Module, ValidationPipe } from '@nestjs/common';
+import { HttpException, Module, ValidationPipe } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { APP_PIPE } from '@nestjs/core';
+import { APP_FILTER, APP_PIPE } from '@nestjs/core';
 import { UsersModule } from './users/users.module';
+import { AuthModule } from './auth/auth.module';
 import DatabaseModule from './database/database.module';
 import DatabaseOptions from './database/interface/databaseOption';
 
@@ -26,6 +27,7 @@ import DatabaseOptions from './database/interface/databaseOption';
       },
     }),
     UsersModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [
@@ -34,7 +36,12 @@ import DatabaseOptions from './database/interface/databaseOption';
       provide: APP_PIPE,
       useValue: new ValidationPipe({
         transform: true,
+        whitelist: true,
       }),
+    },
+    {
+      provide: APP_FILTER,
+      useClass: HttpException,
     },
   ],
 })
