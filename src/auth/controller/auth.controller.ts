@@ -5,12 +5,14 @@ import { Response, ResponseOK } from 'src/dto/response.dto';
 import { AuthToken } from 'src/domain/auth.domain';
 import UserModel from 'src/domain/users.domain';
 import { plainToInstance } from 'class-transformer';
+import { Public } from 'src/decorators/public.decorator';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('/register')
+  @Public()
   async register(
     @Body() registerRequest: RegisterRequest,
   ): Promise<Response<null>> {
@@ -21,6 +23,7 @@ export class AuthController {
   }
 
   @Post('/login')
+  @Public()
   @HttpCode(HttpStatus.OK)
   async login(
     @Body() loginRequest: LoginRequest,
