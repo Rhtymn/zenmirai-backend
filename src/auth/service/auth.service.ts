@@ -13,6 +13,7 @@ export class AuthService {
   ) {}
 
   async register(u: UserModel) {
+    u.name = u.name.toLocaleLowerCase();
     const user = await this.usersRepository.getByUsername(u.username);
     if (user) {
       throw new BadRequestException('username already registered');

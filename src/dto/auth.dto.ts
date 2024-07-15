@@ -3,9 +3,17 @@ import {
   IsStrongPassword,
   MinLength,
   NotContains,
+  Validate,
 } from 'class-validator';
+import { NoLeadingWhiteSpace, NoTrailingWhiteSpace } from 'src/util/validator';
 
 export class RegisterRequest {
+  @Validate(NoTrailingWhiteSpace, {
+    message: 'name should not have trailing white space',
+  })
+  @Validate(NoLeadingWhiteSpace, {
+    message: 'name should not have leading white space',
+  })
   @IsNotEmpty()
   name: string;
 
@@ -14,6 +22,7 @@ export class RegisterRequest {
   @MinLength(6)
   username: string;
 
+  @NotContains(' ', { message: 'password should not contain any whitespace' })
   @IsStrongPassword(
     {
       minUppercase: 1,
